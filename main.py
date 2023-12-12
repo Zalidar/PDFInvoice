@@ -15,6 +15,7 @@ for filepath in filepaths:
     pdf.set_font("Times", size=18)
     pdf.cell(h=8, w=50,  txt=f"Invoice #: {invoice_number}", ln=1)
     pdf.cell(h=8, w=50, txt=f"Date: {invoice_date}", ln=1)
+    pdf.ln(8)
 
     df = pd.read_excel(filepath, sheet_name="Sheet 1")
 
@@ -38,5 +39,22 @@ for filepath in filepaths:
         pdf.cell(w=40, h=8, txt=str(row['amount_purchased']), border=1)
         pdf.cell(w=30, h=8, txt=str(row['price_per_unit']), border=1)
         pdf.cell(w=20, h=8, txt=str(row['total_price']), ln=1, border=1)
+
+    # Add totals
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=70, h=8, txt="", border=1)
+    pdf.cell(w=40, h=8, txt="", border=1)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=20, h=8, txt=str(df["total_price"].sum()), ln=1, border=1)
+
+    # Add closing
+    pdf.ln(16)
+    pdf.set_font(family="Times", size=14, style="B")
+    pdf.set_text_color(0, 0, 0)
+    pdf.cell(w=0, h=8, txt=f"The total amount due is ${df['total_price'].sum()}.", ln=1)
+    pdf.cell(w=25, h=8, txt="PythonHow")
+    pdf.image("pythonhow.png", w=10)
+
+
 
     pdf.output(f"PDFs/{filename}.pdf")
